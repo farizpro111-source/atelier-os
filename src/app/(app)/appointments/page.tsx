@@ -15,16 +15,9 @@ import { PageHeading } from "@/components/page-heading";
 import { cn } from "@/lib/utils";
 import { telegramHaptic } from "@/lib/telegram/client";
 
-const staff = ["Все", "Aruzhan", "Madina", "Timur", "Aigerim"];
+const staff = ["Все"];
 
-const bookings = [
-  { time:"09:00", end:"10:00", staff:"Timur", client:"Arman Tulegenov", service:"Мужская стрижка", price:"18 000 ₸", status:"Подтверждено", tone:"success" },
-  { time:"10:00", end:"11:30", staff:"Aruzhan", client:"Dana Sadykova", service:"Стрижка + укладка", price:"32 000 ₸", status:"Подтверждено", tone:"success" },
-  { time:"11:30", end:"14:00", staff:"Madina", client:"Alina Karimova", service:"Окрашивание", price:"95 000 ₸", status:"В салоне", tone:"accent" },
-  { time:"13:00", end:"14:30", staff:"Aruzhan", client:"Nursultan A.", service:"Haircut + beard", price:"28 000 ₸", status:"Подтверждено", tone:"success" },
-  { time:"15:30", end:"17:00", staff:"Aigerim", client:"Kamila R.", service:"Маникюр", price:"22 000 ₸", status:"Подтвердить", tone:"warning" },
-  { time:"17:30", end:"18:30", staff:"Timur", client:"Dias B.", service:"Стрижка", price:"18 000 ₸", status:"Ожидает", tone:"neutral" },
-];
+const bookings: Array<{time:string;end:string;staff:string;client:string;service:string;price:string;status:string;tone:string}> = [];
 
 const tones:Record<string,string>={
  success:"bg-[#e5f0e8] text-[#3f7159]",
@@ -105,7 +98,7 @@ export default function AppointmentsPage() {
         </div>
 
         <div className="space-y-2.5">
-          {visible.map((b)=>(
+          {visible.length ? visible.map((b)=>(
             <button
               key={b.time+b.client}
               className="panel-strong flex w-full items-stretch overflow-hidden rounded-[20px] text-left"
@@ -139,7 +132,7 @@ export default function AppointmentsPage() {
                 </span>
               </div>
             </button>
-          ))}
+          )) : <div className="panel rounded-[18px] p-5 text-center text-[12px] font-semibold text-black/45">На этот день записей нет. Добавьте первую запись, чтобы открыть операционный день.</div>}
         </div>
 
         <div className="mt-4 flex items-center justify-center gap-2 text-[10px] font-bold text-black/27">

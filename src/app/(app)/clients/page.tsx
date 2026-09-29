@@ -9,19 +9,13 @@ import {
 } from "lucide-react";
 import { PageHeading } from "@/components/page-heading";
 
-const clients=[
- {name:"Dana Sadykova",phone:"+7 701 245 16 10",visits:12,ltv:"640 000 ₸",last:"18 сен",vip:false},
- {name:"Alina Karimova",phone:"+7 777 818 42 06",visits:8,ltv:"1 120 000 ₸",last:"сегодня",vip:true},
- {name:"Nursultan Akhmet",phone:"+7 702 446 52 31",visits:15,ltv:"775 000 ₸",last:"сегодня",vip:true},
- {name:"Kamila Rakhim",phone:"+7 705 937 03 18",visits:5,ltv:"310 000 ₸",last:"21 сен",vip:false},
- {name:"Arman Tulegenov",phone:"+7 747 401 87 17",visits:9,ltv:"465 000 ₸",last:"24 сен",vip:false},
-];
+const clients: Array<{name:string;phone:string;visits:number;ltv:string;last:string;vip:boolean}> = [];
 
 export default function ClientsPage(){
  return (
   <>
     <PageHeading
-      eyebrow="CRM · 428 клиентов"
+      eyebrow="CRM · организация"
       title="Клиенты"
       description="Кто возвращается, сколько тратит и когда был последний визит."
       action={
@@ -68,7 +62,7 @@ export default function ClientsPage(){
       </div>
 
       <div className="space-y-2.5">
-        {clients.map(c=>(
+        {clients.length ? clients.map(c=>(
           <button key={c.name} className="panel-strong flex w-full items-center gap-3 rounded-[19px] p-3 text-left">
             <div className="relative grid size-11 shrink-0 place-items-center rounded-[15px] bg-[#ece5d9] text-[11px] font-extrabold">
               {c.name.split(" ").map(x=>x[0]).join("")}
@@ -94,7 +88,7 @@ export default function ClientsPage(){
             </div>
             <ChevronRight className="size-4 shrink-0 text-black/20"/>
           </button>
-        ))}
+        )) : <div className="panel rounded-[18px] p-5 text-center text-[12px] font-semibold text-black/45">Клиентов пока нет. Добавьте первого клиента, чтобы вести историю визитов и LTV.</div>}
       </div>
     </section>
   </>
