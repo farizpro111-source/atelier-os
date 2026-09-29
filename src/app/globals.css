@@ -1,0 +1,78 @@
+@import "tailwindcss";
+
+:root {
+  --canvas: #f4f0e8;
+  --panel: #fffdfa;
+  --panel-strong: #ffffff;
+  --ink: #171815;
+  --muted: #706d65;
+  --line: rgba(23, 24, 21, .09);
+  --line-strong: rgba(23, 24, 21, .15);
+  --accent: #a98652;
+  --accent-soft: #efe5d3;
+  --success: #3f7159;
+  --success-soft: #e6f1e9;
+  --warning: #9c6b31;
+  --warning-soft: #f5ead9;
+  --danger: #a45249;
+  --danger-soft: #f5e5e2;
+  --tg-safe-top: env(safe-area-inset-top, 0px);
+  --tg-safe-bottom: env(safe-area-inset-bottom, 0px);
+  --tg-content-safe-top: 0px;
+  --tg-content-safe-bottom: 0px;
+}
+
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+html { background: var(--canvas); color: var(--ink); }
+
+body {
+  min-height: 100dvh;
+  margin: 0;
+  font-family: var(--font-manrope), ui-sans-serif, system-ui, sans-serif;
+  font-weight: 500;
+  background:
+    radial-gradient(circle at 86% -8%, rgba(169,134,82,.16), transparent 22rem),
+    linear-gradient(180deg, #f7f4ed 0%, var(--canvas) 48%, #eee8dd 100%);
+  color: var(--ink);
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+
+button, input { font: inherit; }
+button { touch-action: manipulation; }
+::selection { background: rgba(169,134,82,.22); }
+
+.app-safe-top { padding-top: max(var(--tg-safe-top), var(--tg-content-safe-top)); }
+.app-safe-bottom { padding-bottom: max(var(--tg-safe-bottom), var(--tg-content-safe-bottom)); }
+
+.panel {
+  background: color-mix(in srgb, var(--panel) 96%, transparent);
+  border: 1px solid var(--line);
+  box-shadow:
+    0 1px 0 rgba(255,255,255,.85) inset,
+    0 12px 32px rgba(46, 38, 26, .055);
+}
+
+.panel-strong {
+  background: var(--panel-strong);
+  border: 1px solid var(--line-strong);
+  box-shadow:
+    0 1px 0 rgba(255,255,255,.95) inset,
+    0 16px 42px rgba(46, 38, 26, .07);
+}
+
+.metric {
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -.055em;
+}
+
+.scrollbar-none::-webkit-scrollbar { display: none; }
+.scrollbar-none { scrollbar-width: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    scroll-behavior: auto !important;
+    transition-duration: .01ms !important;
+    animation-duration: .01ms !important;
+  }
+}
