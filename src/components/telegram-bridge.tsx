@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
+import { usePathname, useRouter } from "next/navigation";
 
 function applyInsets() {
   const webApp = window.Telegram?.WebApp;
@@ -20,6 +21,9 @@ function applyInsets() {
 }
 
 export function TelegramBridge() {
+  const router = useRouter();
+  const pathname = usePathname();
+
   useEffect(() => {
     const webApp = window.Telegram?.WebApp;
     if (!webApp) return;
@@ -37,18 +41,34 @@ export function TelegramBridge() {
     webApp.onEvent?.("contentSafeAreaChanged", sync);
 
     if (webApp.initData) {
-      fetch("/api/telegram/validate", {
+      fetch("/api/telegram/bootstrap", {
         method: "POST",
         headers: { "content-type": "application/json" },
         body: JSON.stringify({ initData: webApp.initData }),
-      }).catch(() => undefined);
+      })
+        .then(async (response) => {
+          if (!response.ok) return null;
+          return response.json() as Promise<{ ok: boolean; onboarded: boolean }>;
+        })
+        .then((result) => {
+          if (!result?.ok) return;
+
+          if (!result.onboarded && pathname !== "/onboarding") {
+            router.replace("/onboarding");
+          }
+
+          if (result.onboarded && pathname === "/onboarding") {
+            router.replace("/dashboard");
+          }
+        })
+        .catch(() => undefined);
     }
 
     return () => {
       webApp.offEvent?.("safeAreaChanged", sync);
       webApp.offEvent?.("contentSafeAreaChanged", sync);
     };
-  }, []);
+  }, [pathname, router]);
 
   return null;
 }
