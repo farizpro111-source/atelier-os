@@ -20,13 +20,13 @@ export function getVerifiedTelegramUser(initData: string) {
   const authDate = Number(params.get("auth_date") || 0);
   const ageSeconds = Math.floor(Date.now() / 1000) - authDate;
 
-  if (!authDate || ageSeconds > 43200 || ageSeconds < -60) {
+  if (!Number.isSafeInteger(authDate) || !authDate || ageSeconds > 3600 || ageSeconds < -60) {
     return null;
   }
 
   try {
     const user = JSON.parse(params.get("user") || "null") as VerifiedTelegramUser | null;
-    if (!user || !Number.isSafeInteger(user.id)) return null;
+    if (!user || !Number.isSafeInteger(user.id) || user.id <= 0) return null;
     return user;
   } catch {
     return null;

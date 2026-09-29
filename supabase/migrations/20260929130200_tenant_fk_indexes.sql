@@ -1,0 +1,11 @@
+create index appointments_actor_tenant_idx on public.appointments(organization_id,created_by);
+create index appointments_branch_tenant_idx on public.appointments(organization_id,branch_id);
+create index appointments_client_tenant_idx on public.appointments(organization_id,client_id);
+create index appointments_service_tenant_idx on public.appointments(organization_id,service_id);
+create index appointments_staff_tenant_idx on public.appointments(organization_id,staff_id);
+create index payments_appointment_tenant_idx on public.payments(organization_id,appointment_id);
+create index staff_branch_tenant_idx on public.staff(organization_id,branch_id);
+create index staff_member_tenant_idx on public.staff(organization_id,user_id);
+create index staff_schedules_tenant_idx on public.staff_schedules(organization_id,staff_id);
+create index staff_services_staff_tenant_idx on public.staff_services(organization_id,staff_id);
+create index staff_services_service_tenant_idx on public.staff_services(organization_id,service_id);

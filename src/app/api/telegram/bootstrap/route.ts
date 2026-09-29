@@ -1,9 +1,11 @@
 import { NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { getVerifiedTelegramUser } from "@/lib/telegram/server";
+import { signSession } from "@/lib/telegram/session-token";
+import { SESSION_COOKIE } from "@/lib/auth";
 
 export async function POST(request: Request) {
-  if (!process.env.SUPABASE_SECRET_KEY) {
+  if (!process.env.SUPABASE_SECRET_KEY || !process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.TELEGRAM_BOT_TOKEN) {
     return NextResponse.json(
       { ok: false, configured: false },
       { status: 503 },
@@ -56,11 +58,15 @@ export async function POST(request: Request) {
     );
   }
 
-  return NextResponse.json(
+  const response = NextResponse.json(
     {
       ok: true,
       onboarded: (count ?? 0) > 0,
     },
     { headers: { "Cache-Control": "private, no-store" } },
   );
+  response.cookies.set(SESSION_COOKIE, signSession(appUser.id, process.env.TELEGRAM_BOT_TOKEN), {
+    httpOnly: true, secure: process.env.NODE_ENV === "production", sameSite: "lax", path: "/", maxAge: 43200,
+  });
+  return response;
 }

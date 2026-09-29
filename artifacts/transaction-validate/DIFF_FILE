@@ -1,0 +1,25 @@
+﻿diff --git "a/C:\\Users\\User.FIN-OTDEL\\atelier-work\\atelier-os\\artifacts\\transaction-validate\\BASELINE_FILE" "b/C:\\Users\\User.FIN-OTDEL\\atelier-work\\atelier-os\\artifacts\\transaction-validate\\MODIFIED_FILE"
+index 2dedc6c..d34978e 100644
+--- "a/C:\\Users\\User.FIN-OTDEL\\atelier-work\\atelier-os\\artifacts\\transaction-validate\\BASELINE_FILE"
++++ "b/C:\\Users\\User.FIN-OTDEL\\atelier-work\\atelier-os\\artifacts\\transaction-validate\\MODIFIED_FILE"
+@@ -1,15 +1,16 @@
+-﻿import { createHmac, timingSafeEqual } from "node:crypto";
++import { createHmac, timingSafeEqual } from "node:crypto";
+ 
+ export function validateTelegramInitData(initData: string, botToken: string) {
++  if (!initData || initData.length > 16384 || !botToken) return false;
+   const params = new URLSearchParams(initData);
+   const receivedHash = params.get("hash");
+-  if (!receivedHash) return false;
++  if (!receivedHash || !/^[a-fA-F0-9]{64}$/.test(receivedHash)) return false;
++  if (new Set(params.keys()).size !== [...params.keys()].length) return false;
+ 
+   params.delete("hash");
+-  params.delete("signature");
+ 
+   const dataCheckString = [...params.entries()]
+-    .sort(([a], [b]) => a.localeCompare(b))
++    .sort(([a], [b]) => a < b ? -1 : a > b ? 1 : 0)
+     .map(([key, value]) => `${key}=${value}`)
+     .join("\n");
+ 
