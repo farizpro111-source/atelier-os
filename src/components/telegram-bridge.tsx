@@ -52,6 +52,7 @@ export function TelegramBridge() {
         })
         .then((result) => {
           if (!result?.ok) return;
+          window.dispatchEvent(new Event('atelier-session-ready'));
 
           if (!result.onboarded && pathname !== "/onboarding") {
             router.replace("/onboarding");

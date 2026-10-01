@@ -1,0 +1,21 @@
+import { formatInTimeZone, fromZonedTime } from 'date-fns-tz';
+import type { Workspace, Appointment, Payment } from './types';
+export const statusLabels = { pending: 'Ожидает подтверждения', confirmed: 'Подтверждено', checked_in: 'В салоне', completed: 'Завершено', cancelled: 'Отменено', no_show: 'Неявка' };
+export function money(value: number, currency = 'KZT') { return new Intl.NumberFormat('ru-RU', { style: 'currency', currency }).format(value / 100); }
+export function minor(value: string) { if (!/^\d{1,10}([.,]\d{1,2})?$/.test(value)) throw new Error('Введите неотрицательную цену, максимум 2 знака после запятой.'); const [a,b=''] = value.replace(',', '.').split('.'); const n = Number(a)*100 + Number(b.padEnd(2,'0')); if (!Number.isSafeInteger(n)) throw new Error('Слишком большая сумма.'); return n; }
+export function localDay(date: string | Date, tz: string) { return formatInTimeZone(date, tz, 'yyyy-MM-dd'); }
+export function localTime(date: string, tz: string) { return formatInTimeZone(date, tz, 'HH:mm'); }
+export function shiftDay(day: string, offset: number) { const d = new Date(day+'T12:00:00Z'); d.setUTCDate(d.getUTCDate()+offset); return d.toISOString().slice(0,10); }
+export function instant(day: string, time: string, tz: string) { const value = fromZonedTime(`${day}T${time}`, tz); if (Number.isNaN(value.getTime()) || formatInTimeZone(value,tz,'yyyy-MM-dd HH:mm') !== `${day} ${time.slice(0,5)}`) throw new Error('Недопустимое местное время.'); return value.toISOString(); }
+export function blocks(a: Appointment) { return a.status !== 'cancelled' && a.status !== 'no_show'; }
+export function freeSlots(w: Workspace, staffId: string, serviceId: string, day: string, duration?: number, exclude?: string) {
+ const staff=w.staff.find(s=>s.id===staffId && s.active && !s.archived_at); const service=w.services.find(s=>s.id===serviceId && s.active && !s.archived_at); const shift=w.schedules.find(s=>s.staff_id===staffId && s.work_date===day);
+ if (!staff || !service || !shift || !w.assignments.some(a=>a.staff_id===staffId&&a.service_id===serviceId)) return [];
+ const start=new Date(instant(day,shift.starts_local,w.organization.timezone)).getTime(); const end=new Date(instant(day,shift.ends_local,w.organization.timezone)).getTime(); const ms=(duration ?? service.duration_minutes)*60000; const slots:string[]=[];
+ if(ms<=0) return slots;
+ for(let t=start;t+ms<=end;t+=900000) if(!w.appointments.some(a=>a.id!==exclude && a.staff_id===staffId && blocks(a) && t<new Date(a.ends_at).getTime() && t+ms>new Date(a.starts_at).getTime())) slots.push(localTime(new Date(t).toISOString(),w.organization.timezone));
+ return slots;
+}
+export function clientMetrics(w: Workspace, id: string) { const history=w.appointments.filter(a=>a.client_id===id).sort((a,b)=>b.starts_at.localeCompare(a.starts_at)); const done=history.filter(a=>a.status==='completed'); const ids=new Set(history.map(a=>a.id)); return { history, visits:done.length, last:done[0]?.starts_at, ltv:w.payments.filter(p=>ids.has(p.appointment_id)&&p.status==='paid').reduce((n,p)=>n+Number(p.amount_minor),0) }; }
+export function revenue(payments: Payment[], from: string, to: string, tz: string) { const inRange=(d:string|null)=>d && localDay(d,tz)>=from && localDay(d,tz)<to; const paid=payments.filter(p=>(p.status==='paid'||p.status==='refunded')&&inRange(p.paid_at)); const refunds=payments.filter(p=>p.status==='refunded'&&inRange(p.refunded_at)).reduce((s,p)=>s+Number(p.amount_minor),0); const gross=paid.reduce((s,p)=>s+Number(p.amount_minor),0); return { gross, refunds, net:gross-refunds, average:paid.length?Math.round(gross/new Set(paid.map(p=>p.appointment_id)).size):0 }; }
+export function utilization(w: Workspace, day: string, staffId?: string) { const shifts=w.schedules.filter(s=>s.work_date===day&&(!staffId||s.staff_id===staffId)); let available=0,busy=0; for(const s of shifts){const start=new Date(instant(day,s.starts_local,w.organization.timezone)).getTime(),end=new Date(instant(day,s.ends_local,w.organization.timezone)).getTime(); available+=end-start; for(const a of w.appointments.filter(a=>a.staff_id===s.staff_id&&blocks(a))) busy+=Math.max(0,Math.min(end,new Date(a.ends_at).getTime())-Math.max(start,new Date(a.starts_at).getTime()));} return available?Math.round(busy/available*100):null; }

@@ -6,14 +6,14 @@
 - MOCK
 - NOT IMPLEMENTED
 
-## Current status
+## Historical bootstrap status (superseded by docs/MVP-STATUS.md)
 - CI lint/build: REAL + VERIFIED on GitHub Actions.
 - Telegram bridge: REAL + UNVERIFIED until tested inside Telegram.
 - Telegram initData validator: REAL + UNVERIFIED until tested with a real bot token/session.
 - Mobile app shell: REAL + BUILD VERIFIED; visual/device verification still pending.
 - Supabase integration: REAL + UNVERIFIED until project credentials are connected.
-- Dashboard metrics: MOCK fixtures.
-- Appointment/client persistence: NOT IMPLEMENTED.
+- Dashboard metrics: transactional payment/appointment/shift calculations; no production fixtures.
+- Appointment/client persistence: implemented; real SQL CRUD/authorization tests and separate browser UI-contract tests. Authenticated Telegram end-to-end acceptance requires configured credentials.
 
 ## Build acceptance
 - [x] TypeScript production build succeeds.

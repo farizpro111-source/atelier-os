@@ -1,0 +1,15 @@
+Observed execution issues and corrections:
+1. git fetch: cannot open .git/FETCH_HEAD: Permission denied. Re-run with approval succeeded; main and origin/main initially both 3cd70c5.
+2. npm.ps1 blocked by PowerShell execution policy. Use npm.cmd; lint/build completed.
+3. Supabase/agent-browser npm network access denied in sandbox. Approved CLI invocation succeeded. Migration created via Supabase CLI, then applied via connected Supabase tool.
+4. Unit date assertion compared equivalent timestamps with different formatting. Expected value normalized to ISO; regression and DST tests passed.
+5. Playwright browser binary initially absent. Installed Chromium; browser tests executed.
+6. Existing ROLLBACK.sh contained PowerShell, not portable shell. Replaced with POSIX shell and reran on a separate copy; restored SHA256 equals baseline. Initial retry failed because Git bash PATH lacked dirname; explicit standard shell PATH fixed the execution.
+7. First multi-file patch failed validation; check-validator script was absent until separately created. Subsequent real BASELINE/MODIFIED/ROLLBACK commands all exited 0.
+8. Vercel connected deploy tool returned Tool deploy_to_vercel not found. CLI whoami exited 1, Logged out. CLI deploy --temporary --yes --json ran the build, then exited 1:
+Error: EPERM: operation not permitted, symlink 'onboarding.func' -> 'C:\Users\User.FIN-OTDEL\atelier-work\atelier-os\.vercel\output\functions\api\operations.func'
+9. Generated .vercel launcher code was picked up by ESLint. Excluded generated .vercel output from lint and TypeScript input; source checks pass. No source lint rule disabled.
+10. A previous tool process handle expired after session continuation. Browser verification was relaunched, not assumed complete.
+11. Onboarding browser assertion found two alerts (form error and Next route announcer). Narrowed selector by error text; all 3 browser tests subsequently passed.
+
+This record describes historical failures; final literal command results are in final-checks.json. Authenticated Telegram/device/deployment acceptance is still external and unverified.

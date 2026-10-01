@@ -24,6 +24,10 @@ export function OnboardingForm() {
     setLoading(true);
 
     try {
+      const bootstrap = await fetch('/api/telegram/bootstrap', {
+        method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ initData }),
+      });
+      if (!bootstrap.ok) throw new Error('Не удалось подтвердить Telegram-сессию. Откройте приложение заново.');
       const response = await fetch("/api/onboarding", {
         method: "POST",
         headers: { "content-type": "application/json" },
@@ -33,7 +37,7 @@ export function OnboardingForm() {
       const result = await response.json();
 
       if (!response.ok || !result.ok) {
-        throw new Error("Не удалось создать салон.");
+        throw new Error(result.reason || "Не удалось создать салон.");
       }
 
       window.Telegram?.WebApp?.HapticFeedback?.notificationOccurred?.("success");
@@ -70,6 +74,8 @@ export function OnboardingForm() {
         </span>
         <input
           value={branchName}
+          required
+          minLength={2}
           onChange={(event) => setBranchName(event.target.value)}
           maxLength={80}
           className="h-12 w-full rounded-[15px] border border-black/[.09] bg-white px-3.5 text-[13px] font-bold outline-none focus:border-[#a98652]/60 focus:ring-4 focus:ring-[#a98652]/10"
@@ -77,7 +83,7 @@ export function OnboardingForm() {
       </label>
 
       {error ? (
-        <div className="rounded-[14px] bg-[#f5e5e2] px-3.5 py-3 text-[11px] font-bold text-[#9b5047]">
+        <div role="alert" className="rounded-[14px] bg-[#f5e5e2] px-3.5 py-3 text-[11px] font-bold text-[#9b5047]">
           {error}
         </div>
       ) : null}

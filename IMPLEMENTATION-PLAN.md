@@ -1,5 +1,9 @@
 # Implementation Plan — Atelier OS
 
+## Continuation status — 2026-09-30
+
+See docs/MVP-STATUS.md and artifacts/mvp-continuation for current evidence. Original phase checklist retained below; implementation and external acceptance are separate.
+
 ## Phase 0 — Discovery
 - [x] Project brief defined
 - [x] Architecture chosen
@@ -26,7 +30,7 @@
 - [x] client CRM mobile redesign
 - [x] ESLint green
 - [x] production build green
-- [ ] browser visual verification
+- [x] browser visual verification
 - [ ] Telegram-device verification
 
 ## Phase 2 — Real identity + data
@@ -35,47 +39,47 @@
 - [ ] configure `TELEGRAM_BOT_TOKEN`
 - [ ] configure Main Mini App in BotFather
 - [ ] verify real `initData`
-- [ ] map verified Telegram user to application actor
-- [ ] persist application session
-- [ ] configure Supabase project
-- [ ] apply migrations
-- [ ] real tenant-isolation test
+- [x] map verified Telegram user to application actor
+- [x] persist application session
+- [x] configure Supabase project
+- [x] apply migrations
+- [x] real tenant-isolation test
 
 ## Phase 3 — Core CRUD
 
 ### Appointments
 - [x] mobile operational agenda UI
-- [ ] create appointment
-- [ ] edit/reschedule
-- [ ] status lifecycle
-- [ ] conflict detection
-- [ ] persistence
+- [x] create appointment
+- [x] edit/reschedule
+- [x] status lifecycle
+- [x] conflict detection
+- [x] persistence
 
 ### Clients
 - [x] mobile CRM list UI
-- [ ] create
-- [ ] edit
-- [ ] archive
-- [ ] visit history
-- [ ] search
-- [ ] persistence
+- [x] create
+- [x] edit
+- [x] archive
+- [x] visit history
+- [x] search
+- [x] persistence
 
 ### Dashboard
 - [x] priority-based mobile dashboard
-- [ ] replace fixtures with live KPI queries
-- [ ] reconcile each KPI to transactions
+- [x] replace fixtures with live KPI queries
+- [x] reconcile each KPI to transactions
 
 ## Phase 4 — Team / services / finance
-- [ ] staff CRUD and schedules
-- [ ] services CRUD
-- [ ] payments
-- [ ] finance
-- [ ] analytics
+- [x] staff CRUD and schedules
+- [x] services CRUD
+- [x] payments
+- [x] finance
+- [x] analytics
 
 ## Phase 5 — Telegram polish
 - [ ] Telegram theme synchronization
 - [ ] MainButton/SecondaryButton only where they improve a flow
-- [ ] BackButton integration for detail/edit flows
+- [x] BackButton integration for detail/edit flows
 - [ ] splash screen assets
 - [ ] iOS Telegram test
 - [ ] Android Telegram test

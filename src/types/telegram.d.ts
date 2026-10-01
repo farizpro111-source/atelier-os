@@ -22,6 +22,12 @@ declare global {
     };
     colorScheme?: "light" | "dark";
     themeParams?: Record<string, string | undefined>;
+    BackButton?: {
+      show: () => void;
+      hide: () => void;
+      onClick: (callback: () => void) => void;
+      offClick: (callback: () => void) => void;
+    };
     safeAreaInset?: { top: number; bottom: number; left: number; right: number };
     contentSafeAreaInset?: { top: number; bottom: number; left: number; right: number };
     HapticFeedback?: {

@@ -1,0 +1,382 @@
+﻿diff --git a/AGENTS.md b/AGENTS.md
+index 6d15cfa..4058d1c 100644
+--- a/AGENTS.md
++++ b/AGENTS.md
+@@ -66,3 +66,13 @@ Do not say “done” until:
+ - verification performed is stated accurately.
+ 
+ If something could not be verified, say exactly what remains unverified.
++
++<!-- BEGIN:nextjs-agent-rules -->
++
++# This is NOT the Next.js you know
++
++This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` (resolved from this file's directory; in monorepos the `next` package may not be visible from the repo root) before writing any code. Heed deprecation notices.
++
++This block is written and re-added by `next dev` — verify at `node_modules/next/dist/server/lib/generate-agent-files.js`. Removing it from a diff only re-creates the uncommitted change; committing it with your work keeps the tree clean.
++
++<!-- END:nextjs-agent-rules -->
+diff --git a/next-env.d.ts b/next-env.d.ts
+index 6080add..ce4e94a 100644
+--- a/next-env.d.ts
++++ b/next-env.d.ts
+@@ -1,2 +1,7 @@
+ /// <reference types="next" />
+ /// <reference types="next/image-types/global" />
++import "./.next/types/routes.d.ts";
++import "./.next/types/root-params.d.ts";
++
++// NOTE: This file should not be edited
++// see https://nextjs.org/docs/app/api-reference/config/typescript for more information.
+diff --git a/src/app/(app)/appointments/page.tsx b/src/app/(app)/appointments/page.tsx
+index 200b94b..fdc3621 100644
+--- a/src/app/(app)/appointments/page.tsx
++++ b/src/app/(app)/appointments/page.tsx
+@@ -1,145 +1 @@
+-"use client";
+-
+-import { useMemo, useState } from "react";
+-import {
+-  ChevronLeft,
+-  ChevronRight,
+-  CirclePlus,
+-  Clock3,
+-  Filter,
+-  MoreHorizontal,
+-  Search,
+-  UserRound,
+-} from "lucide-react";
+-import { PageHeading } from "@/components/page-heading";
+-import { cn } from "@/lib/utils";
+-import { telegramHaptic } from "@/lib/telegram/client";
+-
+-const staff = ["Все"];
+-
+-const bookings: Array<{time:string;end:string;staff:string;client:string;service:string;price:string;status:string;tone:string}> = [];
+-
+-const tones:Record<string,string>={
+- success:"bg-[#e5f0e8] text-[#3f7159]",
+- accent:"bg-[#eee5d5] text-[#866735]",
+- warning:"bg-[#f5ead9] text-[#966629]",
+- neutral:"bg-black/[.055] text-black/45",
+-};
+-
+-export default function AppointmentsPage() {
+-  const [selected,setSelected]=useState("Все");
+-  const visible=useMemo(
+-    ()=>selected==="Все" ? bookings : bookings.filter(b=>b.staff===selected),
+-    [selected],
+-  );
+-
+-  return (
+-    <>
+-      <PageHeading
+-        eyebrow="День · 31 запись"
+-        title="Записи"
+-        description="Весь рабочий день одной понятной лентой."
+-        action={
+-          <button
+-            onClick={()=>telegramHaptic("light")}
+-            className="inline-flex h-11 items-center gap-2 self-start rounded-[14px] bg-[#191a17] px-4 text-[12px] font-extrabold text-white"
+-          >
+-            <CirclePlus className="size-4" />
+-            Добавить
+-          </button>
+-        }
+-      />
+-
+-      <div className="panel rounded-[20px] p-3.5">
+-        <div className="flex items-center justify-between">
+-          <button aria-label="Предыдущий день" className="grid size-10 place-items-center rounded-[13px] bg-black/[.045]">
+-            <ChevronLeft className="size-4" />
+-          </button>
+-          <button className="text-center">
+-            <div className="text-[13px] font-extrabold">29 сентября</div>
+-            <div className="mt-0.5 text-[10px] font-bold text-black/35">Вторник · Сегодня</div>
+-          </button>
+-          <button aria-label="Следующий день" className="grid size-10 place-items-center rounded-[13px] bg-black/[.045]">
+-            <ChevronRight className="size-4" />
+-          </button>
+-        </div>
+-
+-        <div className="mt-3 flex gap-2">
+-          <button className="flex h-10 flex-1 items-center gap-2 rounded-[13px] border border-black/[.07] bg-white px-3 text-left text-[11px] font-bold text-black/42">
+-            <Search className="size-3.5" /> Найти запись
+-          </button>
+-          <button aria-label="Фильтры" className="grid size-10 place-items-center rounded-[13px] border border-black/[.07] bg-white text-black/45">
+-            <Filter className="size-4" />
+-          </button>
+-        </div>
+-      </div>
+-
+-      <div className="scrollbar-none -mx-4 mt-3 flex gap-2 overflow-x-auto px-4 pb-1 sm:-mx-5 sm:px-5">
+-        {staff.map(name=>(
+-          <button
+-            key={name}
+-            onClick={()=>{setSelected(name);telegramHaptic("selection")}}
+-            className={cn(
+-              "min-h-9 whitespace-nowrap rounded-full px-3.5 text-[10px] font-extrabold transition",
+-              selected===name
+-                ? "bg-[#191a17] text-white shadow-[0_7px_18px_rgba(25,26,23,.13)]"
+-                : "border border-black/[.06] bg-white/70 text-black/43",
+-            )}
+-          >
+-            {name}
+-          </button>
+-        ))}
+-      </div>
+-
+-      <section className="mt-4">
+-        <div className="mb-2.5 flex items-center justify-between">
+-          <div className="text-[12px] font-extrabold text-black/54">{visible.length} записей показано</div>
+-          <div className="text-[10px] font-bold text-black/30">09:00–19:00</div>
+-        </div>
+-
+-        <div className="space-y-2.5">
+-          {visible.length ? visible.map((b)=>(
+-            <button
+-              key={b.time+b.client}
+-              className="panel-strong flex w-full items-stretch overflow-hidden rounded-[20px] text-left"
+-              onClick={()=>telegramHaptic("selection")}
+-            >
+-              <div className="w-[5px] bg-[#b39462]" />
+-              <div className="grid min-w-[72px] place-items-center border-r border-black/[.055] px-3 py-4">
+-                <div>
+-                  <div className="metric text-[14px] font-extrabold">{b.time}</div>
+-                  <div className="mt-0.5 text-[9px] font-bold text-black/30">{b.end}</div>
+-                </div>
+-              </div>
+-              <div className="min-w-0 flex-1 px-3.5 py-3">
+-                <div className="flex items-start justify-between gap-2">
+-                  <div className="min-w-0">
+-                    <div className="truncate text-[12px] font-extrabold">{b.client}</div>
+-                    <div className="mt-1 truncate text-[10px] font-semibold text-black/39">{b.service}</div>
+-                  </div>
+-                  <MoreHorizontal className="size-4 shrink-0 text-black/24" />
+-                </div>
+-                <div className="mt-2.5 flex items-center justify-between gap-2">
+-                  <div className="flex items-center gap-1 text-[9px] font-bold text-black/35">
+-                    <UserRound className="size-3" /> {b.staff}
+-                  </div>
+-                  <div className="metric text-[10px] font-extrabold">{b.price}</div>
+-                </div>
+-              </div>
+-              <div className="flex w-[88px] items-center justify-center pr-3">
+-                <span className={cn("rounded-full px-2 py-1.5 text-center text-[8.5px] font-extrabold leading-3",tones[b.tone])}>
+-                  {b.status}
+-                </span>
+-              </div>
+-            </button>
+-          )) : <div className="panel rounded-[18px] p-5 text-center text-[12px] font-semibold text-black/45">На этот день записей нет. Добавьте первую запись, чтобы открыть операционный день.</div>}
+-        </div>
+-
+-        <div className="mt-4 flex items-center justify-center gap-2 text-[10px] font-bold text-black/27">
+-          <Clock3 className="size-3.5" />
+-          Свободные окна будут рассчитываться из реального графика
+-        </div>
+-      </section>
+-    </>
+-  );
+-}
++export { default } from '@/components/crm/appointments';
+diff --git a/src/app/(app)/clients/page.tsx b/src/app/(app)/clients/page.tsx
+index ba94545..9770fe9 100644
+--- a/src/app/(app)/clients/page.tsx
++++ b/src/app/(app)/clients/page.tsx
+@@ -1,96 +1 @@
+-import {
+-  ChevronRight,
+-  CirclePlus,
+-  Crown,
+-  Phone,
+-  Search,
+-  SlidersHorizontal,
+-  Sparkles,
+-} from "lucide-react";
+-import { PageHeading } from "@/components/page-heading";
+-
+-const clients: Array<{name:string;phone:string;visits:number;ltv:string;last:string;vip:boolean}> = [];
+-
+-export default function ClientsPage(){
+- return (
+-  <>
+-    <PageHeading
+-      eyebrow="CRM · организация"
+-      title="Клиенты"
+-      description="Кто возвращается, сколько тратит и когда был последний визит."
+-      action={
+-        <button className="inline-flex h-11 items-center gap-2 self-start rounded-[14px] bg-[#191a17] px-4 text-[12px] font-extrabold text-white">
+-          <CirclePlus className="size-4"/>
+-          Добавить
+-        </button>
+-      }
+-    />
+-
+-    <div className="panel rounded-[20px] p-3">
+-      <div className="flex gap-2">
+-        <label className="flex h-11 flex-1 items-center gap-2 rounded-[14px] border border-black/[.07] bg-white px-3">
+-          <Search className="size-4 text-black/30"/>
+-          <input
+-            aria-label="Поиск клиентов"
+-            placeholder="Имя или телефон"
+-            className="min-w-0 flex-1 bg-transparent text-[12px] font-bold outline-none placeholder:text-black/28"
+-          />
+-        </label>
+-        <button aria-label="Фильтры" className="grid size-11 place-items-center rounded-[14px] border border-black/[.07] bg-white text-black/44">
+-          <SlidersHorizontal className="size-4"/>
+-        </button>
+-      </div>
+-    </div>
+-
+-    <div className="mt-4 grid grid-cols-2 gap-2.5">
+-      <div className="rounded-[18px] border border-[#d8bf95]/45 bg-[#f2e7d5] p-3.5">
+-        <Sparkles className="size-4 text-[#8d6c38]"/>
+-        <div className="metric mt-3 text-[21px] font-extrabold">68%</div>
+-        <div className="mt-0.5 text-[9px] font-extrabold text-black/38">возвращаются повторно</div>
+-      </div>
+-      <div className="rounded-[18px] border border-black/[.07] bg-[#1b1c18] p-3.5 text-white">
+-        <Crown className="size-4 text-[#d8bc8c]"/>
+-        <div className="metric mt-3 text-[21px] font-extrabold">47</div>
+-        <div className="mt-0.5 text-[9px] font-extrabold text-white/42">VIP-клиентов</div>
+-      </div>
+-    </div>
+-
+-    <section className="mt-5">
+-      <div className="mb-2.5 flex items-center justify-between">
+-        <h2 className="text-[16px] font-extrabold tracking-[-.025em]">Недавние клиенты</h2>
+-        <span className="text-[10px] font-bold text-black/30">По последнему визиту</span>
+-      </div>
+-
+-      <div className="space-y-2.5">
+-        {clients.length ? clients.map(c=>(
+-          <button key={c.name} className="panel-strong flex w-full items-center gap-3 rounded-[19px] p-3 text-left">
+-            <div className="relative grid size-11 shrink-0 place-items-center rounded-[15px] bg-[#ece5d9] text-[11px] font-extrabold">
+-              {c.name.split(" ").map(x=>x[0]).join("")}
+-              {c.vip ? (
+-                <span className="absolute -right-1 -top-1 grid size-4 place-items-center rounded-full bg-[#1c1d19] text-[#e1c79a]">
+-                  <Crown className="size-2.5" />
+-                </span>
+-              ) : null}
+-            </div>
+-            <div className="min-w-0 flex-1">
+-              <div className="truncate text-[12px] font-extrabold">{c.name}</div>
+-              <div className="mt-1 flex items-center gap-1 text-[9px] font-semibold text-black/37">
+-                <Phone className="size-2.5" /> {c.phone}
+-              </div>
+-              <div className="mt-2 flex gap-3 text-[9px] font-bold text-black/34">
+-                <span>{c.visits} визитов</span>
+-                <span>Последний: {c.last}</span>
+-              </div>
+-            </div>
+-            <div className="text-right">
+-              <div className="metric whitespace-nowrap text-[11px] font-extrabold">{c.ltv}</div>
+-              <div className="mt-1 text-[8px] font-bold uppercase tracking-[.09em] text-black/27">LTV</div>
+-            </div>
+-            <ChevronRight className="size-4 shrink-0 text-black/20"/>
+-          </button>
+-        )) : <div className="panel rounded-[18px] p-5 text-center text-[12px] font-semibold text-black/45">Клиентов пока нет. Добавьте первого клиента, чтобы вести историю визитов и LTV.</div>}
+-      </div>
+-    </section>
+-  </>
+- );
+-}
++export { default } from '@/components/crm/clients';
+diff --git a/src/app/(app)/services/page.tsx b/src/app/(app)/services/page.tsx
+index 1068ad3..1d40141 100644
+--- a/src/app/(app)/services/page.tsx
++++ b/src/app/(app)/services/page.tsx
+@@ -1,2 +1 @@
+-import { PageHeading } from "@/components/page-heading";
+-export default function Page(){return <><PageHeading eyebrow="Каталог" title="Услуги" description="Прайс, длительность, категории и доступность специалистов."/><div className="panel rounded-[24px] p-8 text-sm text-black/45">NOT IMPLEMENTED — service CRUD входит в Phase 4.</div></>}
++export { default } from '@/components/crm/services';
+diff --git a/src/app/(app)/staff/page.tsx b/src/app/(app)/staff/page.tsx
+index fe8a554..edd1429 100644
+--- a/src/app/(app)/staff/page.tsx
++++ b/src/app/(app)/staff/page.tsx
+@@ -1,2 +1 @@
+-import { PageHeading } from "@/components/page-heading";
+-export default function Page(){return <><PageHeading eyebrow="Команда" title="Сотрудники" description="Роли, филиалы, графики и персональная загрузка."/><div className="panel rounded-[24px] p-8 text-sm text-black/45">NOT IMPLEMENTED — staff CRUD и расписания входят в Phase 4.</div></>}
++export { default } from '@/components/crm/staff';
+diff --git a/src/app/globals.css b/src/app/globals.css
+index 10e5cd1..da26896 100644
+--- a/src/app/globals.css
++++ b/src/app/globals.css
+@@ -76,3 +76,17 @@ button { touch-action: manipulation; }
+     animation-duration: .01ms !important;
+   }
+ }
++
++/* Atelier forms, Radix focus management, existing brand palette. */
++:focus-visible{outline:3px solid #79603a;outline-offset:3px}
++.crm-card{background:var(--panel-strong);border:1px solid var(--line);border-radius:20px;padding:20px;overflow-wrap:anywhere}
++.crm-list{display:grid;gap:12px;margin-block:16px}.crm-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));gap:12px;margin-block:16px}
++.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:48px;border-radius:12px;padding:12px 18px;background:var(--ink);color:white;font-size:14px;font-weight:700;cursor:pointer;text-align:center}.btn.secondary{background:var(--panel);color:var(--ink);border:1px solid var(--line-strong)}.btn.danger{background:#a13732;color:white}.btn:disabled{opacity:.55;cursor:wait}
++.field{display:grid;gap:6px;font-size:14px;font-weight:600;min-width:0}.field input,.field select,.field textarea{width:100%;min-width:0;min-height:48px;border:1px solid var(--line-strong);border-radius:12px;background:white;color:var(--ink);padding:12px;font:inherit;font-size:16px}.field textarea{resize:vertical}
++.crm-form,.crm-form fieldset{display:grid;gap:16px;min-width:0}.crm-form{margin-block:20px}.toolbar{display:grid;gap:16px;margin-block:20px}.actions{display:flex;flex-wrap:wrap;gap:8px;margin-block:16px}.check{display:flex;align-items:center;min-height:44px;gap:10px;font-size:14px}.check input{width:20px;height:20px}
++.muted{color:#62685f;font-size:14px;line-height:1.6}.empty{padding:40px 24px;text-align:center;display:grid;gap:16px;justify-items:center;margin-block:20px}.empty h2,.sheet h2{font-size:20px;font-weight:800}.empty p{max-width:440px;color:#62685f}
++.client-card{display:flex;align-items:flex-start;gap:12px;width:100%;text-align:left;cursor:pointer;flex-wrap:wrap}.grow{flex:1;min-width:130px;display:grid;gap:4px}.avatar{display:grid;place-items:center;width:44px;height:44px;border-radius:14px;background:var(--accent-soft);font-weight:800}.money{font-variant-numeric:tabular-nums;font-weight:800;overflow-wrap:anywhere}.money small{display:block;color:#62685f;font-size:12px;font-weight:500}
++.sheet-overlay{position:fixed;inset:0;background:rgb(23 24 21 / .45);z-index:90}.sheet{position:fixed;z-index:100;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:640px;max-height:92dvh;overflow-y:auto;overscroll-behavior:contain;border-radius:28px 28px 0 0;background:var(--canvas);padding:24px 20px calc(24px + env(safe-area-inset-bottom));overflow-wrap:anywhere}.sheet-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px}.sheet-head p{font-size:12px;color:#62685f;margin-top:8px}.icon-btn{min-width:44px;min-height:44px;display:grid;place-items:center;border-radius:12px;background:white}
++.confirm{position:fixed;z-index:110;top:50%;left:50%;transform:translate(-50%,-50%);width:calc(100% - 32px);max-width:440px;padding:24px;background:var(--panel);border-radius:24px}.confirm h2{font-size:20px;font-weight:800;margin-bottom:12px}.confirm p{line-height:1.6}.error-message{color:#a13732;background:#fff0ed;padding:12px;border-radius:12px}.history-row{border-top:1px solid var(--line);padding-block:16px;font-size:14px}.history-row p,.history-row span{color:#62685f}.detail-metrics{display:flex;gap:16px;flex-wrap:wrap;margin-block:16px;font-size:14px}.shortcut{display:flex;align-items:center;justify-content:space-between;min-height:64px;font-weight:700}
++
++.agenda-time{font-size:20px;font-weight:800;min-width:64px;font-variant-numeric:tabular-nums}.agenda-time small{display:block;font-size:14px;font-weight:500;color:#62685f}.status{display:inline-flex;width:fit-content;border-radius:8px;padding:4px 8px;background:var(--accent-soft);font-size:12px;color:#5b472d}.status-completed,.status-checked_in{background:var(--success-soft);color:#306647}.status-cancelled,.status-no_show{background:var(--danger-soft);color:#a13732}.day-control{display:grid;grid-template-columns:48px minmax(0,1fr) 48px;gap:12px;align-items:end;margin-block:20px}
+\ No newline at end of file
+diff --git a/src/components/telegram-bridge.tsx b/src/components/telegram-bridge.tsx
+index 7c46438..fb06718 100644
+--- a/src/components/telegram-bridge.tsx
++++ b/src/components/telegram-bridge.tsx
+@@ -52,6 +52,7 @@ export function TelegramBridge() {
+         })
+         .then((result) => {
+           if (!result?.ok) return;
++          window.dispatchEvent(new Event('atelier-session-ready'));
+ 
+           if (!result.onboarded && pathname !== "/onboarding") {
+             router.replace("/onboarding");
+diff --git a/tsconfig.json b/tsconfig.json
+index 909e967..5d998c4 100644
+--- a/tsconfig.json
++++ b/tsconfig.json
+@@ -1 +1,41 @@
+-{"compilerOptions":{"target":"ES2017","lib":["dom","dom.iterable","esnext"],"allowJs":false,"skipLibCheck":true,"strict":true,"noEmit":true,"esModuleInterop":true,"module":"esnext","moduleResolution":"bundler","resolveJsonModule":true,"isolatedModules":true,"jsx":"react-jsx","incremental":true,"plugins":[{"name":"next"}],"paths":{"@/*":["./src/*"]}},"include":["next-env.d.ts","**/*.ts","**/*.tsx",".next/types/**/*.ts"],"exclude":["node_modules"]}
+\ No newline at end of file
++{
++  "compilerOptions": {
++    "target": "ES2017",
++    "lib": [
++      "dom",
++      "dom.iterable",
++      "esnext"
++    ],
++    "allowJs": false,
++    "skipLibCheck": true,
++    "strict": true,
++    "noEmit": true,
++    "esModuleInterop": true,
++    "module": "esnext",
++    "moduleResolution": "bundler",
++    "resolveJsonModule": true,
++    "isolatedModules": true,
++    "jsx": "react-jsx",
++    "incremental": true,
++    "plugins": [
++      {
++        "name": "next"
++      }
++    ],
++    "paths": {
++      "@/*": [
++        "./src/*"
++      ]
++    }
++  },
++  "include": [
++    "next-env.d.ts",
++    "**/*.ts",
++    "**/*.tsx",
++    ".next/types/**/*.ts",
++    ".next/dev/types/**/*.ts"
++  ],
++  "exclude": [
++    "node_modules"
++  ]
++}

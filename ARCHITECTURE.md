@@ -37,7 +37,7 @@ Tenant graph:
 
 ## Authentication
 Primary identity direction: verified Telegram Mini App identity.
-Current state: Telegram initData validation exists, but verified Telegram identity is not yet mapped to a persistent application session / Supabase actor.
+Current state: verified Telegram identity maps to app_users.id and a purpose-bound, expiring HttpOnly signed application session. Every workspace request rechecks membership. See docs/MVP-STATUS.md for verified and externally blocked acceptance.
 Fallback foundation: Supabase Auth email/password remains available during development.
 Roles: owner, admin, specialist.
 

@@ -1,4 +1,5 @@
-import { Bell, ChevronDown, Scissors } from "lucide-react";
+import { Settings, Scissors } from "lucide-react";
+import Link from 'next/link';
 import { BottomNav } from "@/components/nav";
 import { TelegramUserPill } from "@/components/telegram-user-pill";
 
@@ -18,21 +19,18 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           </div>
 
           <div className="flex items-center gap-2">
-            <button
-              aria-label="Уведомления"
+            <Link href="/settings"
+              aria-label="Настройки профиля"
               className="grid size-10 place-items-center rounded-[14px] border border-black/[.08] bg-white/80 text-black/60 shadow-sm"
             >
-              <Bell className="size-[17px]" strokeWidth={2.2} />
-            </button>
+              <Settings className="size-[17px]" strokeWidth={2.2} />
+            </Link>
             <TelegramUserPill />
-            <button aria-label="Меню профиля" className="hidden size-9 place-items-center rounded-xl text-black/35 sm:grid">
-              <ChevronDown className="size-4" />
-            </button>
           </div>
         </div>
       </header>
 
-      <main className="px-4 pb-[104px] pt-5 sm:px-5 sm:pt-6 md:px-7">
+      <main className="px-4 pb-[calc(104px+var(--tg-safe-bottom)+var(--tg-content-safe-bottom))] pt-5 sm:px-5 sm:pt-6 md:px-7">
         {children}
       </main>
 

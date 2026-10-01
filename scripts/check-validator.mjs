@@ -1,0 +1,13 @@
+import { readFileSync } from 'node:fs';
+import { createHmac } from 'node:crypto';
+import { createRequire } from 'node:module';
+import vm from 'node:vm';
+import ts from 'typescript';
+const code = ts.transpileModule(readFileSync(process.argv[2], 'utf8'), { compilerOptions: { module: ts.ModuleKind.CommonJS } }).outputText;
+const context = { exports: {}, require: createRequire(import.meta.url), Buffer, URLSearchParams };
+vm.runInNewContext(code, context);
+const params = new URLSearchParams({ auth_date: '1800000000', user: '{"id":1}' });
+const data = [...params].sort(([a], [b]) => a.localeCompare(b)).map(([k,v]) => `${k}=${v}`).join('\n');
+const key = createHmac('sha256', 'WebAppData').update('transaction-test-token').digest();
+params.set('hash', createHmac('sha256', key).update(data).digest('hex') + 'zz');
+console.log(JSON.stringify({ input: 'valid HMAC plus non-hex zz suffix', accepted: context.exports.validateTelegramInitData(params.toString(), 'transaction-test-token') }));

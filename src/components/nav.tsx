@@ -27,11 +27,12 @@ export function BottomNav() {
     <nav className="app-safe-bottom fixed inset-x-0 bottom-0 z-50 mx-auto w-full max-w-[1100px] border-t border-black/[.07] bg-[#fbf9f5]/94 px-2 pt-2 shadow-[0_-12px_36px_rgba(45,38,28,.07)] backdrop-blur-2xl">
       <div className="grid grid-cols-5 pb-2">
         {items.map(({ href, label, icon: Icon }) => {
-          const active = pathname.startsWith(href);
+          const active = pathname.startsWith(href) || (href === '/settings' && ['/services', '/staff', '/analytics'].some(p => pathname.startsWith(p)));
           return (
             <Link
               key={href}
               href={href}
+              aria-current={active ? 'page' : undefined}
               onClick={() => telegramHaptic("selection")}
               className={cn(
                 "group flex min-h-[54px] flex-col items-center justify-center gap-1 rounded-[15px] px-1 text-[10px] font-bold transition",

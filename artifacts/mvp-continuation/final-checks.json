@@ -1,0 +1,32 @@
+[
+  {
+    "command": "npm run lint",
+    "stdout": "\n> atelier-os@0.1.0 lint\n> eslint .\n\n",
+    "stderr": "",
+    "exit_status": 0
+  },
+  {
+    "command": "npm run test",
+    "stdout": "\n> atelier-os@0.1.0 test\n> tsx --test tests/*.test.ts\n\n✔ money is exact in minor units and rejects invalid input (1.8173ms)\n✔ timezone conversion is independent of browser timezone (5.0306ms)\n✔ slots exclude overlaps but permit adjacent visits (1.3362ms)\n✔ cancelled visits release slots; rescheduling excludes itself (1.0964ms)\n✔ refund counted on refund day, not paid day; pending excluded (0.5348ms)\n✔ CRM visits count completions, LTV excludes refunds (0.2389ms)\n✔ input validation rejects missing name and negative prices (3.2652ms)\n✔ signed sessions expire and reject tampering and wrong secrets (0.6816ms)\n✔ Telegram HMAC accepts authentic input, rejects malformed hash and duplicates (1.4894ms)\n✔ Telegram server checks identity and auth-date freshness (0.9601ms)\nℹ tests 10\nℹ suites 0\nℹ pass 10\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 803.8597\n",
+    "stderr": "",
+    "exit_status": 0
+  },
+  {
+    "command": "npm run build",
+    "stdout": "\n> atelier-os@0.1.0 build\n> next build\n\n▲ Next.js 16.3.3 (Turbopack)\n✓ Running next.config.ts took 35ms\n\n  Creating an optimized production build ...\n✓ Compiled successfully in 12.5s\n  Running TypeScript ...\n  Finished TypeScript in 9.6s ...\n  Collecting page data using 7 workers ...\n  Generating static pages using 7 workers (0/17) ...\n  Generating static pages using 7 workers (4/17) \r\n  Generating static pages using 7 workers (8/17) \r\n  Generating static pages using 7 workers (12/17) \r\n✓ Generating static pages using 7 workers (17/17) in 670ms\n  Finalizing page optimization ...\n\nRoute (app)\n┌ ○ /\n├ ○ /_not-found\n├ ○ /analytics\n├ ƒ /api/onboarding\n├ ƒ /api/operations\n├ ƒ /api/telegram/bootstrap\n├ ƒ /api/telegram/validate\n├ ƒ /api/workspace\n├ ○ /appointments\n├ ○ /clients\n├ ○ /dashboard\n├ ○ /finance\n├ ○ /login\n├ ○ /onboarding\n├ ○ /services\n├ ○ /settings\n└ ○ /staff\n\n\n○  (Static)   prerendered as static content\nƒ  (Dynamic)  server-rendered on demand\n\n",
+    "stderr": "",
+    "exit_status": 0
+  },
+  {
+    "command": "npm run typecheck",
+    "stdout": "\n> atelier-os@0.1.0 typecheck\n> tsc --noEmit\n\n",
+    "stderr": "",
+    "exit_status": 0
+  },
+  {
+    "command": "npm run test:e2e",
+    "stdout": "\n> atelier-os@0.1.0 test:e2e\n> playwright test\n\n\nRunning 3 tests using 1 worker\n\n  ok 1 tests\\browser\\mobile.spec.ts:3:5 › real server rejects unsigned access and renders mobile error states (3.9s)\n  ok 2 tests\\browser\\mobile.spec.ts:19:5 › onboarding outside Telegram does not fabricate successful identity (668ms)\n  ok 3 tests\\browser\\mobile.spec.ts:30:5 › UI contract: client sheet focus, submission, error and mobile finance rendering (2.6s)\n\n  3 passed (9.1s)\n",
+    "stderr": "[WebServer] (node:17324) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.\n[WebServer] (Use `node --trace-warnings ...` to show where the warning was created)\n(node:15608) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.\n(Use `node --trace-warnings ...` to show where the warning was created)\n",
+    "exit_status": 0
+  }
+]

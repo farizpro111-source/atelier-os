@@ -22,7 +22,7 @@ function getServerSnapshot() {
 export function TelegramUserPill() {
   const snapshot = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
   const data = snapshot ? JSON.parse(snapshot) as { name: string; photo: string } : null;
-  const name = data?.name || "Aruzhan";
+  const name = data?.name || "Telegram";
   const photo = data?.photo;
 
   return (

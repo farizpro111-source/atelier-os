@@ -11,3 +11,11 @@ coverage/
 .vscode/
 .idea/
 .vercel/
+supabase/.temp/
+*.tsbuildinfo
+test-results/
+playwright-report/
+artifacts/mvp-continuation/*.zip
+artifacts/mvp-continuation/rollback-copy/
+
+.vercel
