@@ -1,4 +1,4 @@
 *.sh text eol=lf
 artifacts/**/*.patch -whitespace
-artifacts/transaction-validate/*FILE* -text
-artifacts/transaction-validate/ROLLBACK_COPY* -text
+artifacts/transaction-validate/*FILE* -text -whitespace
+artifacts/transaction-validate/ROLLBACK_COPY* -text -whitespace
