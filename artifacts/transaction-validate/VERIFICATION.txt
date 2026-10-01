@@ -116,3 +116,71 @@ MVP continuation evidence: ../mvp-continuation/ and ../../docs/MVP-STATUS.md
   ]
 }
 MVP continuation evidence: ../mvp-continuation/ and ../../docs/MVP-STATUS.md
+
+2026-10-01 REVERIFICATION
+{
+  "target": "C:\\Users\\User.FIN-OTDEL\\atelier-work\\atelier-os\\src\\lib\\telegram\\validate-init-data.ts",
+  "changed_branch": "receivedHash strict 64-hex validation",
+  "originalHash": "c0a3770ba2ff303e8efa67a491bc9f07dc331f5f9461088ffccbba66413a26a2",
+  "modifiedHash": "a326d19085fae439e687e17829736bbeec669543b9c0e7c9af47e4cc62d84e86",
+  "rollbackHash": "c0a3770ba2ff303e8efa67a491bc9f07dc331f5f9461088ffccbba66413a26a2",
+  "events": [
+    {
+      "role": "PATCH_RECONSTRUCTION",
+      "command": [
+        "git",
+        "apply",
+        "--directory=artifacts/mvp-continuation/rollback-copy",
+        "C:\\Users\\User.FIN-OTDEL\\atelier-work\\atelier-os\\artifacts\\transaction-validate/DIFF_FILE"
+      ],
+      "stdout": "",
+      "stderr": "",
+      "exit_status": 0
+    },
+    {
+      "role": "BASELINE",
+      "command": [
+        "C:\\Program Files\\nodejs\\node.exe",
+        "scripts/check-validator.mjs",
+        "C:\\Users\\User.FIN-OTDEL\\atelier-work\\atelier-os\\artifacts\\transaction-validate/BASELINE_FILE"
+      ],
+      "stdout": "{\"input\":\"valid HMAC plus non-hex zz suffix\",\"accepted\":true}\n",
+      "stderr": "",
+      "exit_status": 0
+    },
+    {
+      "role": "MODIFIED",
+      "command": [
+        "C:\\Program Files\\nodejs\\node.exe",
+        "scripts/check-validator.mjs",
+        "C:\\Users\\User.FIN-OTDEL\\atelier-work\\atelier-os\\artifacts\\transaction-validate/MODIFIED_FILE"
+      ],
+      "stdout": "{\"input\":\"valid HMAC plus non-hex zz suffix\",\"accepted\":false}\n",
+      "stderr": "",
+      "exit_status": 0
+    },
+    {
+      "role": "ROLLBACK_COMMAND",
+      "command": [
+        "C:/Program Files/Git/bin/bash.exe",
+        "C:\\Users\\User.FIN-OTDEL\\atelier-work\\atelier-os\\artifacts\\transaction-validate/ROLLBACK.sh",
+        "C:\\Users\\User.FIN-OTDEL\\atelier-work\\atelier-os\\artifacts\\transaction-validate/ROLLBACK_COPY"
+      ],
+      "stdout": "",
+      "stderr": "",
+      "exit_status": 0
+    },
+    {
+      "role": "ROLLBACK",
+      "command": [
+        "C:\\Program Files\\nodejs\\node.exe",
+        "scripts/check-validator.mjs",
+        "C:\\Users\\User.FIN-OTDEL\\atelier-work\\atelier-os\\artifacts\\transaction-validate/ROLLBACK_COPY"
+      ],
+      "stdout": "{\"input\":\"valid HMAC plus non-hex zz suffix\",\"accepted\":true}\n",
+      "stderr": "",
+      "exit_status": 0
+    }
+  ]
+}
+MVP continuation evidence: ../mvp-continuation/ and ../../docs/MVP-STATUS.md

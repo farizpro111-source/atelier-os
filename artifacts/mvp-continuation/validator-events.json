@@ -6,6 +6,18 @@
   "rollbackHash": "c0a3770ba2ff303e8efa67a491bc9f07dc331f5f9461088ffccbba66413a26a2",
   "events": [
     {
+      "role": "PATCH_RECONSTRUCTION",
+      "command": [
+        "git",
+        "apply",
+        "--directory=artifacts/mvp-continuation/rollback-copy",
+        "C:\\Users\\User.FIN-OTDEL\\atelier-work\\atelier-os\\artifacts\\transaction-validate/DIFF_FILE"
+      ],
+      "stdout": "",
+      "stderr": "",
+      "exit_status": 0
+    },
+    {
       "role": "BASELINE",
       "command": [
         "C:\\Program Files\\nodejs\\node.exe",
